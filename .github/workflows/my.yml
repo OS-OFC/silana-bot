@@ -22,5 +22,5 @@ jobs:
             ${{ runner.os }}-node-
 
       - run: npm install
-
+      - run: env
       - run: node .
