@@ -1,13 +1,18 @@
-name: Temporary VPS Access
+name: Temporary VPS Access on Push
 
 on:
+  push: # تشغيل عند أي عملية دفع (push)
   workflow_dispatch: # تشغيل يدوي عند الحاجة
 
 jobs:
-  start-vps:
+  run-script:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Tmate (Install and Start Session)
+      # استخدام أكشن GitHub لتسجيل الكود الحالي (checkout)
+      - uses: actions/checkout@v4
+
+      # تثبيت Tmate وفتح جلسة SSH
+      - name: Setup Tmate and Start Session
         run: |
           sudo apt-get update
           sudo apt-get install -y tmate
@@ -20,5 +25,7 @@ jobs:
           echo "Web Connection Details:"
           tmate -S /tmp/tmate.sock display -p '#{tmate_web}'
           echo "=========================="
-      - name: Keep Session Alive (Prevent Workflow from Ending)
+
+      # إبقاء الجلسة حية
+      - name: Keep Session Alive
         run: sleep infinity
