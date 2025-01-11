@@ -1,23 +1,24 @@
-name: Temporary VPS via GitHub Actions
+name: Temporary VPS Access
 
 on:
-  workflow_dispatch: # للسماح بتشغيله يدويًا
+  workflow_dispatch: # تشغيل يدوي عند الحاجة
 
 jobs:
-  connect:
+  start-vps:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Tmate
+      - name: Setup Tmate (Install and Start Session)
         run: |
           sudo apt-get update
           sudo apt-get install -y tmate
-      - name: Start Tmate Session
-        run: |
           tmate -S /tmp/tmate.sock new-session -d
           tmate -S /tmp/tmate.sock wait tmate-ready
-          echo "SSH connection details:"
+          echo "=========================="
+          echo "SSH Connection Details:"
           tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}'
-          echo "Web-based connection:"
+          echo "=========================="
+          echo "Web Connection Details:"
           tmate -S /tmp/tmate.sock display -p '#{tmate_web}'
-      - name: Keep Session Alive
+          echo "=========================="
+      - name: Keep Session Alive (Prevent Workflow from Ending)
         run: sleep infinity
